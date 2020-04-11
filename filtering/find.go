@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Find returns the first item that matches the predicate and then there wont be any more
 // value after that.

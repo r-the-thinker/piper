@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Filter can be used to filter out values.
 // The filterer should return true when the value should be kept and false if not.

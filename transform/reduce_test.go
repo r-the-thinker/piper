@@ -3,8 +3,8 @@ package transform_test
 import (
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
-	transform "github.com/r-the-thinker/piper/transform"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/transform"
 )
 
 func TestReduce(t *testing.T) {

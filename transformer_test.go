@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper"
 )
 
 // Pipefuncs can be triggered with an event emitter and their result is retuned normally

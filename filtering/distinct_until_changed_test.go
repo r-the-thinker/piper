@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
-	filtering "github.com/r-the-thinker/piper/filtering"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/filtering"
 )
 
 func TestDistinctUntilChangedWithComperator(t *testing.T) {

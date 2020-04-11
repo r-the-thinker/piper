@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // TakeWhile allows value to come through until the predicate returned false once!
 // After that the predicate wont be called anymore and the pipefunc wont allow any more

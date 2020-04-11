@@ -1,6 +1,6 @@
 package transform
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Reduce uses the supplied reducer to reduce all values that are received to a single output which will
 // be emitted once the input channel closes.

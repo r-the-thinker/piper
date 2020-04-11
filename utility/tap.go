@@ -1,6 +1,6 @@
 package utility
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Tap calls the provided function whenever there is a value comming in
 // without affecting aynthing else

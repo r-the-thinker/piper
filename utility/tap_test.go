@@ -3,8 +3,8 @@ package utility_test
 import (
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
-	utility "github.com/r-the-thinker/piper/utility"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/utility"
 )
 
 func TestTap(t *testing.T) {

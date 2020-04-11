@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Skip skips n items, so it lets items pass through after n items have already passed.
 // where the amount that should be skipped is in range [1, MAX_INT)

@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Distinct ensures that items are somewhat unique. When you pass 1, 2, 1 as three seperate
 // values then the last 1 wont be emitted. This uses the "hashing" of the go map.

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper"
 )
 
 // Method: From

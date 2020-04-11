@@ -1,6 +1,6 @@
 package transform
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Map can be used to transform the input into some arbitary output
 // It should be noted that the end result that is getting passed to the output channel

@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	piper "github.com/r-the-thinker/piper"
-	utility "github.com/r-the-thinker/piper/utility"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/utility"
 )
 
 func TestDelayOne(t *testing.T) {

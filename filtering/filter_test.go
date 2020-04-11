@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
-	filtering "github.com/r-the-thinker/piper/filtering"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/filtering"
 )
 
 func TestFilter(t *testing.T) {

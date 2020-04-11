@@ -3,7 +3,7 @@ package filtering
 import (
 	"reflect"
 
-	piper "github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper"
 )
 
 // DistinctUntilChanged let's items through only if it is different

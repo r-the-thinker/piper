@@ -1,6 +1,6 @@
 package filtering
 
-import piper "github.com/r-the-thinker/piper"
+import "github.com/r-the-thinker/piper"
 
 // Take grabs the first >number< of items then stops by not allowing any more values
 // to bubble through. The input channel will still be open because we don't close

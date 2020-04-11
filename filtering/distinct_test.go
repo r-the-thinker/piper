@@ -3,8 +3,8 @@ package filtering_test
 import (
 	"testing"
 
-	piper "github.com/r-the-thinker/piper"
-	filtering "github.com/r-the-thinker/piper/filtering"
+	"github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper/filtering"
 )
 
 func TestDistinct(t *testing.T) {

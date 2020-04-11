@@ -4,7 +4,7 @@ import (
 	"container/list"
 	"time"
 
-	piper "github.com/r-the-thinker/piper"
+	"github.com/r-the-thinker/piper"
 )
 
 type delayStorage struct {
