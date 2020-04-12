@@ -9,6 +9,8 @@ import (
 )
 
 func TestAuditTime(t *testing.T) {
+	t.Parallel()
+
 	inChan := make(chan int, 2)
 	outChan := piper.From(inChan).Pipe(filtering.AuditTime(time.Millisecond * 500)).Get().(chan int)
 
@@ -36,6 +38,8 @@ func TestAuditTime(t *testing.T) {
 }
 
 func TestAuditTimeMultiple(t *testing.T) {
+	t.Parallel()
+
 	inChan := make(chan int, 2)
 	outChan := piper.From(inChan).Pipe(filtering.AuditTime(time.Millisecond * 500)).Get().(chan int)
 
@@ -59,5 +63,17 @@ func TestAuditTimeMultiple(t *testing.T) {
 	// check that the output channel closed
 	if _, ok := <-outChan; ok {
 		t.Fatal("Expected the output channel to be closed, but it's not.")
+	}
+}
+
+func TestAuditTimeNone(t *testing.T) {
+	t.Parallel()
+
+	inChan := make(chan int)
+	outChan := piper.From(inChan).Pipe(filtering.AuditTime(time.Millisecond * 1000)).Get().(chan int)
+	close(inChan)
+
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
 	}
 }
