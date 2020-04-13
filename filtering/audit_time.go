@@ -10,7 +10,7 @@ import (
 // It will output the last value it received during that time.
 // dur - the duration to wait
 func AuditTime(dur time.Duration) piper.PipeOperator {
-	return Audit(func(val interface{}) time.Duration {
+	return Audit(func(_ interface{}) time.Duration {
 		return dur
 	})
 }

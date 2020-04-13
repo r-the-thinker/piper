@@ -38,13 +38,20 @@ func auditWorker(durCalc func(interface{}) time.Duration, emitter chan interface
 	var timer <-chan time.Time
 	var mostRecentResult piper.PipeResult = piper.PipeResult{}
 
-runner:
+loop:
 	for {
 		select {
 		case nResult := <-comChan:
 			// if we are not waiting, start the timer
 			if timer == nil {
-				timer = time.After(durCalc(nResult.Value))
+				// if we only get the closing command without it being a value
+				// and there is no timer yet that we are waiting on then end it
+				// right away. Otherwise start the timer for the specified time.
+				if nResult.State == piper.Closed && !nResult.IsValue {
+					timer = time.After(time.Duration(0))
+				} else {
+					timer = time.After(durCalc(nResult.Value))
+				}
 			}
 			// Only override our current value if we actually receive a value
 			// this must be done because the Closed emission has IsValue=false
@@ -63,7 +70,7 @@ runner:
 			// check if we are going to end now
 			if mostRecentResult.State == piper.Closed {
 				close(comChan)
-				break runner
+				break loop
 			}
 		}
 	}
