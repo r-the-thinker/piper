@@ -49,3 +49,21 @@ func TestTakeClosedBefore(t *testing.T) {
 		t.Fatal("Expected the output channel to be closed but it's not")
 	}
 }
+
+func TestTakeClosedWithValue(t *testing.T) {
+	closer := piper.PipeOperator{F: func(r piper.PipeResult, _ interface{}) (piper.PipeResult, interface{}) {
+		return piper.PipeResult{Value: 0, IsValue: true, State: piper.Closed}, nil
+	}}
+
+	// We only need a buffer size of 2 because the third wont be emitted
+	inChan := make(chan int)
+	outChan := piper.From(inChan).Pipe(closer, filtering.Take(2)).Get().(chan int)
+	close(inChan)
+
+	if first := <-outChan; first != 0 {
+		t.Fatalf("Expected to receive 0 but got %v", first)
+	}
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
+	}
+}

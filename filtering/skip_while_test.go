@@ -58,3 +58,17 @@ func TestSkipWhileNone(t *testing.T) {
 		t.Fatal("Expected the output channel to be closed")
 	}
 }
+
+func TestSkipClosedWithValue(t *testing.T) {
+	closer := piper.PipeOperator{F: func(r piper.PipeResult, _ interface{}) (piper.PipeResult, interface{}) {
+		return piper.PipeResult{Value: 1, IsValue: true, State: piper.Closed}, nil
+	}}
+
+	inChan := make(chan int)
+	outChan := piper.From(inChan).Pipe(closer, filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
+	close(inChan)
+
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
+	}
+}

@@ -207,3 +207,41 @@ func TestFilterBool(t *testing.T) {
 
 	close(inChan)
 }
+
+func TestFilterWithClosedAllowed(t *testing.T) {
+	closer := piper.PipeOperator{F: func(r piper.PipeResult, _ interface{}) (piper.PipeResult, interface{}) {
+		return piper.PipeResult{Value: 5, IsValue: true, State: piper.Closed}, nil
+	}}
+	filterer := func(val interface{}) bool {
+		return val.(int) >= 1
+	}
+
+	inChan := make(chan int)
+	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
+
+	close(inChan)
+
+	if val := <-outChan; val != 5 {
+		t.Fatalf("Expected to receive 5 but got %v", val)
+	}
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
+	}
+}
+
+func TestFilterWithClosedNotAllowed(t *testing.T) {
+	closer := piper.PipeOperator{F: func(r piper.PipeResult, _ interface{}) (piper.PipeResult, interface{}) {
+		return piper.PipeResult{Value: 5, IsValue: true, State: piper.Closed}, nil
+	}}
+	filterer := func(val interface{}) bool {
+		return val.(int) >= 11
+	}
+
+	inChan := make(chan int)
+	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
+
+	close(inChan)
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
+	}
+}
