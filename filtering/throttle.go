@@ -60,7 +60,6 @@ loop:
 			}
 		case <-timer:
 			timer = nil
-			fmt.Println("Timer executed")
 
 			// if it was a closed state then we break out of here and die
 			if state == piper.Closed {

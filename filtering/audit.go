@@ -1,7 +1,6 @@
 package filtering
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/r-the-thinker/piper"
@@ -26,7 +25,6 @@ func Audit(durCalc func(interface{}) time.Duration) piper.PipeOperator {
 
 		// if it is not an event then send the piperesult to the worker and break
 		// only the worker decides what we do.
-		fmt.Println("Sending to worker", r)
 		comChan <- r
 		return piper.PipeResult{IsValue: false, State: piper.Break}, nil
 	}
@@ -69,9 +67,11 @@ loop:
 
 			// check if we are going to end now
 			if mostRecentResult.State == piper.Closed {
-				close(comChan)
 				break loop
 			}
 		}
 	}
+
+	close(comChan)
+	close(emitter)
 }

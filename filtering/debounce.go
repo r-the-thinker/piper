@@ -79,9 +79,11 @@ loop:
 
 			// check if we are going to end now
 			if mostRecentResult.State == piper.Closed {
-				close(comChan)
 				break loop
 			}
 		}
 	}
+
+	close(comChan)
+	close(eventEmitter)
 }
