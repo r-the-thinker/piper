@@ -7,14 +7,6 @@ import (
 	"github.com/r-the-thinker/piper/transform"
 )
 
-var sliceToIntMapper piper.PipeOperator = piper.PipeOperator{F: func(r piper.PipeResult, s interface{}) (piper.PipeResult, interface{}) {
-	sum := 0
-	for _, val := range r.Value.([]interface{}) {
-		sum += val.(int)
-	}
-	return piper.PipeResult{Value: sum, IsValue: r.IsValue, State: r.State}, nil
-}, InitialStorage: nil, EventEmitter: nil}
-
 func TestBufferCountNoValues(t *testing.T) {
 	t.Parallel()
 
