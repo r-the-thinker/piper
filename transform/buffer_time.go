@@ -2,7 +2,6 @@ package transform
 
 import (
 	"container/list"
-	"fmt"
 	"time"
 
 	"github.com/r-the-thinker/piper"
@@ -18,7 +17,6 @@ func BufferTime(dur time.Duration) piper.PipeOperator {
 	go bufferTimeWorker(dur, eventEmitter, comChan)
 
 	return piper.PipeOperator{F: func(r piper.PipeResult, storage interface{}) (piper.PipeResult, interface{}) {
-		fmt.Println("Got", r)
 		if r.IsEvent {
 			return r.Value.(piper.PipeResult), nil
 		}
