@@ -7,33 +7,15 @@ import (
 	"github.com/r-the-thinker/piper/transform"
 )
 
+func filterReducer(accumulator, currentVal interface{}) interface{} {
+	return accumulator.(int) + currentVal.(int)
+}
+
 func TestReduce(t *testing.T) {
 	t.Parallel()
 
-	reducer := func(accumulator, currentVal interface{}) interface{} {
-		return accumulator.(int) + currentVal.(int)
-	}
-
 	inputChan := make(chan int, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.Reduce(reducer, int(0))).Get().(chan int)
-
-	inputChan <- 1
-	inputChan <- 2
-	inputChan <- 3
-	close(inputChan)
-	if v := <-outputChan; v != 6 {
-		t.Fatalf("Expected to receive 2, but got %v", v)
-	}
-}
-func TestReduceToInt(t *testing.T) {
-	t.Parallel()
-
-	reducer := func(accumulator int, currentVal interface{}) int {
-		return accumulator + currentVal.(int)
-	}
-
-	inputChan := make(chan int, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.ReduceToInt(reducer, 0)).Get().(chan int)
+	outputChan := piper.From(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
 
 	inputChan <- 1
 	inputChan <- 2
@@ -44,61 +26,35 @@ func TestReduceToInt(t *testing.T) {
 	}
 }
 
-func TestReduceFloat32(t *testing.T) {
+func TestReduceNoValue(t *testing.T) {
 	t.Parallel()
 
-	reducer := func(accumulator float32, currentVal interface{}) float32 {
-		return accumulator + currentVal.(float32)
-	}
-
-	inputChan := make(chan float32, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.ReduceToFloat32(reducer, 0)).Get().(chan float32)
-
-	inputChan <- 1
-	inputChan <- 2
-	inputChan <- 3
+	inputChan := make(chan int)
+	outputChan := piper.From(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
 	close(inputChan)
-	if v := <-outputChan; v != 6 {
-		t.Fatalf("Expected to receive 2, but got %v", v)
+
+	if _, ok := <-outputChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
 	}
 }
 
-func TestReduceToFloat64(t *testing.T) {
+func TestReduceCloedWithValue(t *testing.T) {
 	t.Parallel()
 
-	reducer := func(accumulator float64, currentVal interface{}) float64 {
-		return accumulator + currentVal.(float64)
+	closer := piper.PipeOperator{F: func(r piper.PipeResult, _ interface{}) (piper.PipeResult, interface{}) {
+		return piper.PipeResult{Value: 1, IsValue: true, State: piper.Closed}, nil
+	}}
+
+	inChan := make(chan int)
+	outputChan := piper.From(inChan).Pipe(closer).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
+	inChan <- 1
+	close(inChan)
+
+	if val := <-outputChan; val != 1 {
+		t.Fatalf("Expected to receive 1 but got %v instead", val)
 	}
 
-	inputChan := make(chan float64, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.ReduceToFloat64(reducer, 0)).Get().(chan float64)
-
-	inputChan <- 1
-	inputChan <- 2
-	inputChan <- 3
-	close(inputChan)
-	if v := <-outputChan; v != 6 {
-		t.Fatalf("Expected to receive 2, but got %v", v)
-	}
-}
-
-func TestReduceToString(t *testing.T) {
-	t.Parallel()
-
-	reducer := func(accumulator string, currentVal interface{}) string {
-		// fmt.Println(accumulator, currentVal, accumulator+currentVal)
-		return accumulator + currentVal.(string)
-	}
-
-	inputChan := make(chan string, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.ReduceToString(reducer, "")).Get().(chan string)
-
-	inputChan <- "T"
-	inputChan <- "E"
-	inputChan <- "S"
-	inputChan <- "T"
-	close(inputChan)
-	if v := <-outputChan; v != "TEST" {
-		t.Fatalf("Expected to receive TEST, but got %v", v)
+	if _, ok := <-outputChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
 	}
 }
