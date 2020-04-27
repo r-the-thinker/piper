@@ -13,7 +13,7 @@ func TestTakeWhile(t *testing.T) {
 	predicate := func(val interface{}) bool {
 		return val.(int) != 2
 	}
-	outChan := piper.From(inChan).Pipe(filtering.TakeWhile(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeWhile(predicate)).Get().(chan int)
 
 	// Send in the values, that should not block because
 	// anything including the 2 won't be emitted anymore
@@ -36,7 +36,7 @@ func TestTakeWhileClosedWithValue(t *testing.T) {
 	}
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(closer, filtering.TakeWhile(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.TakeWhile(predicate)).Get().(chan int)
 	close(inChan)
 
 	if first := <-outChan; first != 1 {

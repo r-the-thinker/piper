@@ -10,7 +10,7 @@ import (
 
 func TestDistinct(t *testing.T) {
 	inChan := make(chan int, 4)
-	outChan := piper.From(inChan).Pipe(filtering.Distinct()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Distinct()).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 1
@@ -35,7 +35,7 @@ func TestDistinctCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(closer, filtering.AuditTime(time.Millisecond*500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.AuditTime(time.Millisecond*500)).Get().(chan int)
 
 	close(inChan)
 

@@ -13,7 +13,7 @@ func TestFindOpen(t *testing.T) {
 	predicate := func(val interface{}) bool {
 		return val.(int) > 2
 	}
-	outChan := piper.From(inChan).Pipe(filtering.Find(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Find(predicate)).Get().(chan int)
 
 	// this should not block because we only get 3 and then nothing
 	inChan <- 1
@@ -36,7 +36,7 @@ func TestFindClosed(t *testing.T) {
 	predicate := func(val interface{}) bool {
 		return val.(int) > 2
 	}
-	outChan := piper.From(inChan).Pipe(filtering.Find(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Find(predicate)).Get().(chan int)
 
 	// this should not block because we only get 3 and then nothing
 	inChan <- 1
@@ -57,7 +57,7 @@ func TestFindWithClosedFound(t *testing.T) {
 	}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Filter(predicate)).Get().(chan int)
 	close(inChan)
 
 	if val := <-outChan; val != 5 {
@@ -77,7 +77,7 @@ func TestFindWithClosedNotFound(t *testing.T) {
 	}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(predicate)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Filter(predicate)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {

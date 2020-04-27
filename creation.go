@@ -5,8 +5,10 @@ import (
 	"reflect"
 )
 
-// From is used to create a Piper from a given channel
-func From(in interface{}) Piper {
+// Clone is used to create a Piper from a given channel where the output
+// channel is of the exact same type as the input channel
+// TODO check if read only
+func Clone(in interface{}) Piper {
 	// Check if the value that was received is indeed a channel
 	inVal := reflect.ValueOf(in)
 	if inVal.Kind() != reflect.Chan {

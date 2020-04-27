@@ -14,7 +14,7 @@ func TestDistinctUntilChangedWithComperator(t *testing.T) {
 	}
 
 	inChan := make(chan int, 3)
-	outChan := piper.From(inChan).Pipe(filtering.DistinctUntilChanged(same)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DistinctUntilChanged(same)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 1
@@ -33,7 +33,7 @@ func TestDistinctUntilChangedWithComperator(t *testing.T) {
 
 func TestDistinctUntilChangedWithoutComperator(t *testing.T) {
 	inChan := make(chan int, 3)
-	outChan := piper.From(inChan).Pipe(filtering.DistinctUntilChanged(nil)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DistinctUntilChanged(nil)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 1
@@ -64,7 +64,7 @@ func (c customType) same(o customType) bool {
 func TestDistinctUntilChangedWithoutComperatorCustomType(t *testing.T) {
 
 	inChan := make(chan customType, 3)
-	outChan := piper.From(inChan).Pipe(filtering.DistinctUntilChanged(nil)).Get().(chan customType)
+	outChan := piper.Clone(inChan).Pipe(filtering.DistinctUntilChanged(nil)).Get().(chan customType)
 
 	inChan <- customType{"Robin", 22}
 	inChan <- customType{"Robin", 22}

@@ -17,7 +17,7 @@ func TestFilter(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.Filter(filterer)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Filter(filterer)).Get().(chan int)
 
 	inChan <- 0
 	inChan <- 1
@@ -37,7 +37,7 @@ func TestFilterInt(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterInt(filterer)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterInt(filterer)).Get().(chan int)
 
 	inChan <- 0
 	inChan <- 1
@@ -57,7 +57,7 @@ func TestFilterInt8(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int8, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterInt8(filterer)).Get().(chan int8)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterInt8(filterer)).Get().(chan int8)
 
 	inChan <- 0
 	inChan <- 1
@@ -77,7 +77,7 @@ func TestFilterInt16(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int16, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterInt16(filterer)).Get().(chan int16)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterInt16(filterer)).Get().(chan int16)
 
 	inChan <- 0
 	inChan <- 1
@@ -97,7 +97,7 @@ func TestFilterInt32(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int32, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterInt32(filterer)).Get().(chan int32)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterInt32(filterer)).Get().(chan int32)
 
 	inChan <- 0
 	inChan <- 1
@@ -117,7 +117,7 @@ func TestFilterInt64(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan int64, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterInt64(filterer)).Get().(chan int64)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterInt64(filterer)).Get().(chan int64)
 
 	inChan <- 0
 	inChan <- 1
@@ -137,7 +137,7 @@ func TestFilterFloat32(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan float32, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterFloat32(filterer)).Get().(chan float32)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterFloat32(filterer)).Get().(chan float32)
 
 	inChan <- 0
 	inChan <- 1
@@ -157,7 +157,7 @@ func TestFilterFloat64(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan float64, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterFloat64(filterer)).Get().(chan float64)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterFloat64(filterer)).Get().(chan float64)
 
 	inChan <- 0
 	inChan <- 1
@@ -177,7 +177,7 @@ func TestFilterString(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan string, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterString(filterer)).Get().(chan string)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterString(filterer)).Get().(chan string)
 
 	inChan <- "a"
 	inChan <- "Test"
@@ -197,7 +197,7 @@ func TestFilterBool(t *testing.T) {
 
 	// This needs only size one so that we can send in val 1 without blocking
 	inChan := make(chan bool, 1)
-	outChan := piper.From(inChan).Pipe(filtering.FilterBool(filterer)).Get().(chan bool)
+	outChan := piper.Clone(inChan).Pipe(filtering.FilterBool(filterer)).Get().(chan bool)
 
 	inChan <- true
 	inChan <- false
@@ -217,7 +217,7 @@ func TestFilterWithClosedAllowed(t *testing.T) {
 	}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
 
 	close(inChan)
 
@@ -238,7 +238,7 @@ func TestFilterWithClosedNotAllowed(t *testing.T) {
 	}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Filter(filterer)).Get().(chan int)
 
 	close(inChan)
 	if _, ok := <-outChan; ok {

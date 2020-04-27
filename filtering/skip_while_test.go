@@ -13,7 +13,7 @@ func skipWhileSkipper(val interface{}) bool {
 
 func TestSkipWhileUseOne(t *testing.T) {
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -30,7 +30,7 @@ func TestSkipWhileUseOne(t *testing.T) {
 
 func TestSkipWhileMultiple(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -48,7 +48,7 @@ func TestSkipWhileMultiple(t *testing.T) {
 
 func TestSkipWhileNone(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -65,7 +65,7 @@ func TestSkipClosedWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.SkipWhile(skipWhileSkipper)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {

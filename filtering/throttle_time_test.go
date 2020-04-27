@@ -10,7 +10,7 @@ import (
 
 func TestThrottleTimeNoItems(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)
@@ -25,7 +25,7 @@ func TestThrottleTimeNoItems(t *testing.T) {
 
 func TestThrottleTimeOneItem(t *testing.T) {
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -44,7 +44,7 @@ func TestThrottleTimeOneItem(t *testing.T) {
 
 func TestThrottleTimeMultipleNoWait(t *testing.T) {
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -64,7 +64,7 @@ func TestThrottleTimeMultipleNoWait(t *testing.T) {
 
 func TestThrottleTimeMultipleWait(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.ThrottleTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -97,7 +97,7 @@ func TestThrottleTimeCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.ThrottleTime(time.Millisecond*500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.ThrottleTime(time.Millisecond*500)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)

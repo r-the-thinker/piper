@@ -15,7 +15,7 @@ func TestMapOpen(t *testing.T) {
 	}
 
 	inputChan := make(chan int)
-	outputChan := piper.From(inputChan).Pipe(transform.Map(mapper)).Get().(chan int)
+	outputChan := piper.Clone(inputChan).Pipe(transform.Map(mapper)).Get().(chan int)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -33,7 +33,7 @@ func TestMapClosed(t *testing.T) {
 	}
 
 	inputChan := make(chan int)
-	outputChan := piper.From(inputChan).Pipe(transform.Map(mapper)).Get().(chan int)
+	outputChan := piper.Clone(inputChan).Pipe(transform.Map(mapper)).Get().(chan int)
 
 	close(inputChan)
 	if _, ok := <-outputChan; ok {
@@ -51,7 +51,7 @@ func TestMapInt(t *testing.T) {
 	}
 
 	inputChan := make(chan int)
-	outputChan := piper.From(inputChan).Pipe(transform.MapInt(mapper)).Get().(chan int)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapInt(mapper)).Get().(chan int)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -69,7 +69,7 @@ func TestMapInt8(t *testing.T) {
 	}
 
 	inputChan := make(chan int8)
-	outputChan := piper.From(inputChan).Pipe(transform.MapInt8(mapper)).Get().(chan int8)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapInt8(mapper)).Get().(chan int8)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -87,7 +87,7 @@ func TestMapInt16(t *testing.T) {
 	}
 
 	inputChan := make(chan int16)
-	outputChan := piper.From(inputChan).Pipe(transform.MapInt16(mapper)).Get().(chan int16)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapInt16(mapper)).Get().(chan int16)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -105,7 +105,7 @@ func TestMapInt32(t *testing.T) {
 	}
 
 	inputChan := make(chan int32)
-	outputChan := piper.From(inputChan).Pipe(transform.MapInt32(mapper)).Get().(chan int32)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapInt32(mapper)).Get().(chan int32)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -123,7 +123,7 @@ func TestMapInt64(t *testing.T) {
 	}
 
 	inputChan := make(chan int64)
-	outputChan := piper.From(inputChan).Pipe(transform.MapInt64(mapper)).Get().(chan int64)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapInt64(mapper)).Get().(chan int64)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2 {
@@ -141,7 +141,7 @@ func TestMapFloat32(t *testing.T) {
 	}
 
 	inputChan := make(chan float32)
-	outputChan := piper.From(inputChan).Pipe(transform.MapFloat32(mapper)).Get().(chan float32)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapFloat32(mapper)).Get().(chan float32)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2.0 {
@@ -159,7 +159,7 @@ func TestMapFloat64(t *testing.T) {
 	}
 
 	inputChan := make(chan float64)
-	outputChan := piper.From(inputChan).Pipe(transform.MapFloat64(mapper)).Get().(chan float64)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapFloat64(mapper)).Get().(chan float64)
 
 	inputChan <- 1
 	if v := <-outputChan; v != 2.0 {
@@ -177,7 +177,7 @@ func TestMapString(t *testing.T) {
 	}
 
 	inputChan := make(chan string)
-	outputChan := piper.From(inputChan).Pipe(transform.MapString(mapper)).Get().(chan string)
+	outputChan := piper.Clone(inputChan).Pipe(transform.MapString(mapper)).Get().(chan string)
 
 	inputChan <- "1"
 	if v := <-outputChan; v != "2" {

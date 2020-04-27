@@ -9,7 +9,7 @@ import (
 
 func TestLatestWithItems(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Last()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Last()).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -26,7 +26,7 @@ func TestLatestWithItems(t *testing.T) {
 
 func TestLatestWithoutItems(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Last()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Last()).Get().(chan int)
 
 	close(inChan)
 
@@ -41,7 +41,7 @@ func TestLastWithClosedFound(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Last()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Last()).Get().(chan int)
 	close(inChan)
 
 	if val := <-outChan; val != 5 {

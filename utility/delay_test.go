@@ -12,7 +12,7 @@ func TestDelayOne(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(utility.Delay(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(utility.Delay(time.Millisecond * 500)).Get().(chan int)
 
 	// send the value that we want to have delayed
 	inChan <- 1
@@ -32,7 +32,7 @@ func TestDelayTwo(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(utility.Delay(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(utility.Delay(time.Millisecond * 500)).Get().(chan int)
 
 	// send the value that we want to have delayed
 	inChan <- 1

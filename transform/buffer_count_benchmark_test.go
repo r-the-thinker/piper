@@ -9,7 +9,7 @@ import (
 
 func benchmarkBufferCount(loadCount int, b *testing.B) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(loadCount), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(loadCount), sliceToIntMapper).Get().(chan int)
 
 	// run N rounds wich is defined by the benchmark
 	for round := 1; round < b.N; round++ {

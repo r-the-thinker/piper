@@ -10,7 +10,7 @@ import (
 func TestTake(t *testing.T) {
 	// We only need a buffer size of 2 because the third wont be emitted
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Take(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Take(2)).Get().(chan int)
 
 	inChan <- 0
 	inChan <- 1
@@ -25,7 +25,7 @@ func TestTake(t *testing.T) {
 func TestTakeClosedAfter(t *testing.T) {
 	// We only need a buffer size of 2 because the third wont be emitted
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Take(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Take(2)).Get().(chan int)
 
 	inChan <- 0
 	inChan <- 1
@@ -38,7 +38,7 @@ func TestTakeClosedAfter(t *testing.T) {
 func TestTakeClosedBefore(t *testing.T) {
 	// We only need a buffer size of 2 because the third wont be emitted
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Take(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Take(2)).Get().(chan int)
 
 	inChan <- 0
 	close(inChan)
@@ -57,7 +57,7 @@ func TestTakeClosedWithValue(t *testing.T) {
 
 	// We only need a buffer size of 2 because the third wont be emitted
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Take(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Take(2)).Get().(chan int)
 	close(inChan)
 
 	if first := <-outChan; first != 0 {

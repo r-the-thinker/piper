@@ -15,7 +15,7 @@ func TestScanNoValue(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -27,7 +27,7 @@ func TestScanOneValue(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 
@@ -44,7 +44,7 @@ func TestScanMultipleValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Scan(scanAccumulator, 0)).Get().(chan int)
 	inChan <- 1
 	inChan <- 2
 	close(inChan)
@@ -66,7 +66,7 @@ func TestScanCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, transform.Scan(scanAccumulator, 0)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, transform.Scan(scanAccumulator, 0)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 

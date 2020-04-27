@@ -15,7 +15,7 @@ func TestReduce(t *testing.T) {
 	t.Parallel()
 
 	inputChan := make(chan int, 3)
-	outputChan := piper.From(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
+	outputChan := piper.Clone(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
 
 	inputChan <- 1
 	inputChan <- 2
@@ -30,7 +30,7 @@ func TestReduceNoValue(t *testing.T) {
 	t.Parallel()
 
 	inputChan := make(chan int)
-	outputChan := piper.From(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
+	outputChan := piper.Clone(inputChan).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
 	close(inputChan)
 
 	if _, ok := <-outputChan; ok {
@@ -46,7 +46,7 @@ func TestReduceCloedWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outputChan := piper.From(inChan).Pipe(closer).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
+	outputChan := piper.Clone(inChan).Pipe(closer).Pipe(transform.Reduce(filterReducer, 0)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 

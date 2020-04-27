@@ -17,7 +17,7 @@ func TestAudit(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -35,7 +35,7 @@ func TestAuditMultiple(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -60,7 +60,7 @@ func TestAuditNone(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Audit(auditCalcFunc)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -76,7 +76,7 @@ func TestAuditCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Audit(auditCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Audit(auditCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)

@@ -9,7 +9,7 @@ import (
 
 func TestFirstOneValue(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.First()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.First()).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -23,7 +23,7 @@ func TestFirstOneValue(t *testing.T) {
 
 func TestFirstTwoValue(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.First()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.First()).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -38,7 +38,7 @@ func TestFirstTwoValue(t *testing.T) {
 
 func TestFirstNoValue(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.First()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.First()).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -52,7 +52,7 @@ func TestFirstWithClosedFound(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.First()).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.First()).Get().(chan int)
 	close(inChan)
 
 	if val := <-outChan; val != 5 {

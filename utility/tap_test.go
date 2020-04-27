@@ -11,7 +11,7 @@ func TestTap(t *testing.T) {
 	inChan := make(chan int, 1)
 
 	logChan := make(chan interface{}, 1)
-	piper.From(inChan).Pipe(utility.Tap(func(val interface{}) {
+	piper.Clone(inChan).Pipe(utility.Tap(func(val interface{}) {
 		logChan <- val
 	}))
 

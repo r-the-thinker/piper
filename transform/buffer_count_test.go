@@ -11,7 +11,7 @@ func TestBufferCountNoValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(1), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(1), sliceToIntMapper).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -23,7 +23,7 @@ func TestBufferCountBufferManyValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(1), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(1), sliceToIntMapper).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -41,7 +41,7 @@ func TestBufferCountLessThenBufferManyValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -59,7 +59,7 @@ func TestBufferCountBufferManyValuesTwice(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -85,7 +85,7 @@ func TestBufferCountMixedCount(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -114,7 +114,7 @@ func TestBufferCountCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, transform.BufferCount(2), sliceToIntMapper).Get().(chan int)
 	inChan <- 1
 
 	if val := <-outChan; val != 1 {

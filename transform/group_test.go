@@ -54,7 +54,7 @@ func TestGroupNone(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(0, 0)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(0, 0)).Get().(chan int)
 	close(inChan)
 
 	if isOk := <-outChan; isOk != 1 {
@@ -70,7 +70,7 @@ func TestGroupEvenOddOne(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(1, 1)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(1, 1)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -89,7 +89,7 @@ func TestGroupEvenOddMultipleSame(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(2, 2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(2, 2)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -110,7 +110,7 @@ func TestGroupEvenOddMultipleDifferent(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(1, 2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.Group(evenOddGrouper()), evenOddChecker(1, 2)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -134,7 +134,7 @@ func TestGroupEvenOddOneCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, transform.Group(evenOddGrouper()), evenOddChecker(0, 1)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, transform.Group(evenOddGrouper()), evenOddChecker(0, 1)).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -158,7 +158,7 @@ func TestGroupNilLabels(t *testing.T) {
 	}()
 
 	inChan := make(chan int)
-	piper.From(inChan).Pipe(transform.Group(nil, func(interface{}) int { return 1 }), evenOddChecker(0, 1))
+	piper.Clone(inChan).Pipe(transform.Group(nil, func(interface{}) int { return 1 }), evenOddChecker(0, 1))
 	close(inChan)
 }
 
@@ -172,7 +172,7 @@ func TestGroupNilSelector(t *testing.T) {
 	}()
 
 	inChan := make(chan int)
-	piper.From(inChan).Pipe(transform.Group([]string{"Bla"}, nil), evenOddChecker(0, 1))
+	piper.Clone(inChan).Pipe(transform.Group([]string{"Bla"}, nil), evenOddChecker(0, 1))
 	close(inChan)
 }
 
@@ -186,6 +186,6 @@ func TestGroupNilLabelsAndSelector(t *testing.T) {
 	}()
 
 	inChan := make(chan int)
-	piper.From(inChan).Pipe(transform.Group(nil, nil), evenOddChecker(0, 1))
+	piper.Clone(inChan).Pipe(transform.Group(nil, nil), evenOddChecker(0, 1))
 	close(inChan)
 }

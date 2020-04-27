@@ -12,7 +12,7 @@ func TestDebouceTimeNoReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.DebounceTime(time.Microsecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DebounceTime(time.Microsecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -30,7 +30,7 @@ func TestDebouceTimeReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -50,7 +50,7 @@ func TestDebouceTimeMultipleNoReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -75,7 +75,7 @@ func TestDebouceTimeMultipleReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -104,7 +104,7 @@ func TestDebouceTimeNone(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.DebounceTime(time.Millisecond * 500)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -120,7 +120,7 @@ func TestDebounceTimeCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.DebounceTime(time.Millisecond*500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.DebounceTime(time.Millisecond*500)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)

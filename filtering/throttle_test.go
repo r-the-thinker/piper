@@ -14,7 +14,7 @@ func throttleCalcFunc(val interface{}) time.Duration {
 
 func TestThrottleNoItems(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)
@@ -29,7 +29,7 @@ func TestThrottleNoItems(t *testing.T) {
 
 func TestThrottleOneItem(t *testing.T) {
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -48,7 +48,7 @@ func TestThrottleOneItem(t *testing.T) {
 
 func TestThrottleMultipleNoWait(t *testing.T) {
 	inChan := make(chan int, 1)
-	outChan := piper.From(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -68,7 +68,7 @@ func TestThrottleMultipleNoWait(t *testing.T) {
 
 func TestThrottleMultipleWait(t *testing.T) {
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Throttle(throttleCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -101,7 +101,7 @@ func TestThrottleCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Throttle(throttleCalcFunc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Throttle(throttleCalcFunc)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)

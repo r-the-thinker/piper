@@ -16,7 +16,7 @@ func TestDebouceNoReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -34,7 +34,7 @@ func TestDebouceReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -54,7 +54,7 @@ func TestDebouceMultipleNoReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -79,7 +79,7 @@ func TestDebouceMultipleReset(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 5
@@ -108,7 +108,7 @@ func TestDebouceNone(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -124,7 +124,7 @@ func TestDebouceCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.Debounce(debounceTimeCalc)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.Debounce(debounceTimeCalc)).Get().(chan int)
 
 	before := time.Now()
 	close(inChan)

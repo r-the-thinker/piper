@@ -23,7 +23,7 @@ func TestPluckNoValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -35,7 +35,7 @@ func TestPluckMultipleValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
 	inChan <- 1
 	inChan <- 2
 	close(inChan)
@@ -52,7 +52,7 @@ func TestPluckNotFound(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(pluckStructFiller, transform.Pluck("notfound", true)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(pluckStructFiller, transform.Pluck("notfound", true)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 
@@ -69,7 +69,7 @@ func TestPluckCloedWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, pluckStructFiller, transform.Pluck("Test", true)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 

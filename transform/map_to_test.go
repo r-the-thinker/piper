@@ -11,7 +11,7 @@ func TestMapToNoValue(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -22,7 +22,7 @@ func TestMapToOneValue(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
 	inChan <- 1
 	close(inChan)
 
@@ -38,7 +38,7 @@ func TestMapToMultipleValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.MapTo(2)).Get().(chan int)
 	inChan <- 1
 	inChan <- 2
 	close(inChan)
@@ -59,7 +59,7 @@ func TestMapToCloseWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int, 2)
-	outChan := piper.From(inChan).Pipe(closer, transform.MapTo(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, transform.MapTo(2)).Get().(chan int)
 	inChan <- 9
 	close(inChan)
 

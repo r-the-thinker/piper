@@ -12,7 +12,7 @@ func TestBufferTimeNone(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferTime(time.Millisecond * 500)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferTime(time.Millisecond * 500)).Get().(chan int)
 	before := time.Now()
 	close(inChan)
 
@@ -29,7 +29,7 @@ func TestBufferTimeOneValueinDuration(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -51,7 +51,7 @@ func TestBufferTimeMultipleValuesInDuration(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -74,7 +74,7 @@ func TestBufferTimeOneValueOutsideDuration(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -103,7 +103,7 @@ func TestBufferTimeMultipleValuesOutsideDuration(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1
@@ -138,7 +138,7 @@ func TestBufferTimeClosedWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, transform.BufferTime(time.Millisecond*500), sliceToIntMapper).Get().(chan int)
 
 	before := time.Now()
 	inChan <- 1

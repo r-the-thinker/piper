@@ -15,7 +15,7 @@ func TestBufferWhenNoValues(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -27,7 +27,7 @@ func TestBufferWhenEmitOnClose(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1
@@ -46,7 +46,7 @@ func TestBufferWhenDontEmitOnClose(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, false), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, false), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1
@@ -61,7 +61,7 @@ func TestBufferWhenOne(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1
@@ -82,7 +82,7 @@ func TestBufferWhenTwo(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1
@@ -111,7 +111,7 @@ func TestBufferWhenOneAndHalfEmitOnClose(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, true), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1
@@ -138,7 +138,7 @@ func TestBufferWhenOneAndHalfDontEmitOnClose(t *testing.T) {
 	t.Parallel()
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, false), sliceToIntMapper).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(transform.BufferWhen(bufferWhenFunc, false), sliceToIntMapper).Get().(chan int)
 	// the one is not enough for the buffer to be emitted but the
 	// emit on close flag will make sure that we get the 1
 	inChan <- 1

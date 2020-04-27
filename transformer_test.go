@@ -24,7 +24,7 @@ func TestEventChain(t *testing.T) {
 
 	// The emitter the Piper should listen to
 	eventEmitter := make(chan interface{})
-	outChan := piper.From(inChan).Pipe(piper.PipeOperator{p1, nil, nil}).Pipe(piper.PipeOperator{p2, nil, eventEmitter}).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(piper.PipeOperator{p1, nil, nil}).Pipe(piper.PipeOperator{p2, nil, eventEmitter}).Get().(chan int)
 
 	eventEmitter <- true
 	// Read what value was  received it should be true because this is what the EventEmitter said
@@ -65,7 +65,7 @@ func TestPipeNoInitialStorage(t *testing.T) {
 	}
 
 	// Create the Piper with nil as initial storage
-	piper.From(inChan).Pipe(piper.PipeOperator{testPipefunc, nil, nil}).Get()
+	piper.Clone(inChan).Pipe(piper.PipeOperator{testPipefunc, nil, nil}).Get()
 
 	// Send the values in so the pipefunc knows which state it is in
 	inChan <- 0
@@ -109,7 +109,7 @@ func TestPipeWithInitialStorage(t *testing.T) {
 	}
 
 	// Create the Piper with nil as initial storage
-	piper.From(inChan).Pipe(piper.PipeOperator{testPipefunc, 1, nil}).Get()
+	piper.Clone(inChan).Pipe(piper.PipeOperator{testPipefunc, 1, nil}).Get()
 
 	// Send the values in so the pipefunc knows which state it is in
 	inChan <- 0
@@ -129,7 +129,7 @@ func TestPipeWithInitialStorage(t *testing.T) {
 
 func TestClosingNoFuncs(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Get().(chan int)
+	outChan := piper.Clone(inChan).Get().(chan int)
 
 	close(inChan)
 	if _, ok := <-outChan; ok {
@@ -139,7 +139,7 @@ func TestClosingNoFuncs(t *testing.T) {
 
 func TestClosingOneFunc(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(piper.PipeOperator{
+	outChan := piper.Clone(inChan).Pipe(piper.PipeOperator{
 		func(r piper.PipeResult, s interface{}) (piper.PipeResult, interface{}) {
 			return piper.PipeResult{State: piper.Closed}, nil
 		}, nil, nil}).Get().(chan int)
@@ -157,7 +157,7 @@ func TestClosingTwoFunc(t *testing.T) {
 		func(r piper.PipeResult, s interface{}) (piper.PipeResult, interface{}) {
 			return piper.PipeResult{State: piper.Closed}, nil
 		}, nil, nil}
-	outChan := piper.From(inChan).Pipe(op, op).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(op, op).Get().(chan int)
 
 	close(inChan)
 	if _, ok := <-outChan; ok {
@@ -185,7 +185,7 @@ func TestClosingKeepOpen(t *testing.T) {
 			return piper.PipeResult{State: piper.Open}, nil
 		}, nil, emitter}
 
-	outChan := piper.From(inChan).Pipe(op1, op1, op2).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(op1, op1, op2).Get().(chan int)
 
 	close(inChan)
 	emitter <- true
@@ -209,7 +209,7 @@ func TestOnlyOneIsEvent(t *testing.T) {
 	}
 	o1 := piper.PipeOperator{f, nil, eventEmitter}
 	o2 := piper.PipeOperator{f, nil, nil}
-	piper.From(inChan).Pipe(o1, o2)
+	piper.Clone(inChan).Pipe(o1, o2)
 
 	eventEmitter <- 1
 	if val := <-checkChan; !val {
@@ -228,7 +228,7 @@ func TestEventEmitterInflucence(t *testing.T) {
 	o := piper.PipeOperator{func(r piper.PipeResult, s interface{}) (piper.PipeResult, interface{}) {
 		return r, s
 	}, nil, eventEmitter}
-	outChan := piper.From(inChan).Pipe(o).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(o).Get().(chan int)
 
 	inChan <- 1
 	close(eventEmitter)
@@ -254,7 +254,7 @@ func TestClosingEarly(t *testing.T) {
 	}
 
 	inChan := make(chan int, 3)
-	outChan := piper.From(inChan).Pipe(
+	outChan := piper.Clone(inChan).Pipe(
 		piper.PipeOperator{F: f1, InitialStorage: nil, EventEmitter: nil},
 		piper.PipeOperator{F: f2, InitialStorage: 1, EventEmitter: nil}).Get().(chan int)
 
@@ -273,7 +273,7 @@ func TestClosingEarly(t *testing.T) {
 // We know that Get gives us a channel
 func TestGet(t *testing.T) {
 	c := make(chan int)
-	v := reflect.ValueOf(piper.From(c).Get())
+	v := reflect.ValueOf(piper.Clone(c).Get())
 
 	if v.Kind() != reflect.Chan {
 		t.Fatalf("Get did not return a channel")

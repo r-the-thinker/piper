@@ -9,7 +9,7 @@ import (
 
 func TestTakeUntilOne(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.TakeLast(1)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeLast(1)).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -24,7 +24,7 @@ func TestTakeUntilOne(t *testing.T) {
 
 func TestTakeUntilMultipleSameAsBuffer(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -40,7 +40,7 @@ func TestTakeUntilMultipleSameAsBuffer(t *testing.T) {
 
 func TestTakeUntilMultipleLessThanBuffer(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
 
 	inChan <- 1
 	close(inChan)
@@ -55,7 +55,7 @@ func TestTakeUntilMultipleLessThanBuffer(t *testing.T) {
 
 func TestTakeUntilMultipleMoreThanBuffer(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
 
 	inChan <- 1
 	inChan <- 2
@@ -72,7 +72,7 @@ func TestTakeUntilMultipleMoreThanBuffer(t *testing.T) {
 
 func TestTakeUntilNone(t *testing.T) {
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(filtering.TakeLast(2)).Get().(chan int)
 	close(inChan)
 
 	if _, ok := <-outChan; ok {
@@ -86,7 +86,7 @@ func TestTakeUntilClosedWithValue(t *testing.T) {
 	}}
 
 	inChan := make(chan int)
-	outChan := piper.From(inChan).Pipe(closer, filtering.TakeLast(2)).Get().(chan int)
+	outChan := piper.Clone(inChan).Pipe(closer, filtering.TakeLast(2)).Get().(chan int)
 
 	close(inChan)
 
