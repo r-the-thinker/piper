@@ -63,3 +63,27 @@ func TestCloneBuffered(t *testing.T) {
 
 	close(inChan)
 }
+
+func TestFromTo(t *testing.T) {
+	op := piper.PipeOperator{F: func(r piper.PipeResult, storage interface{}) (piper.PipeResult, interface{}) {
+		if r.IsValue {
+			r.Value = float32(r.Value.(int))
+		}
+		return r, nil
+	}, InitialStorage: nil, EventEmitter: nil}
+
+	inChan := make(chan int)
+	outChan := make(chan float32, 1)
+	piper.FromTo(inChan, outChan).Pipe(op)
+
+	inChan <- 1
+	close(inChan)
+
+	if val := <-outChan; val != 1.0 {
+		t.Fatalf("Expected to receive 1.0 but got %v instead", val)
+	}
+
+	if _, ok := <-outChan; ok {
+		t.Fatal("Expected the output channel to be closed but it's not")
+	}
+}
